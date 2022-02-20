@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package profile;
+
+service Profile {
+    rpc isPriv (PrivRequest) returns (PrivResponse) {}
+}
+
+message PrivRequest {
+    int64 followeeid = 1;
+}
+
+message PrivResponse {
+    bool priv = 1;
+}

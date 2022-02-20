@@ -1,0 +1,56 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 8080:15672
+      - 5672:5672
+
+  users:
+    build: ./services/users
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+      - JWTEXPIRE=1d
+    volumes:
+      - ./services/users/src:/usr/src/app/src
+      - ./services/users/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 8001:8000
+  users-database:
+    build: ./database/users
+    ports:
+      - 5000:5432
+
+  profile:
+    build: ./services/profile
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    volumes:
+      - ./services/profile/src:/usr/src/app/src
+      - ./services/profile/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 8000:8000
+  profile-database:
+    build: ./database/profile
+    ports: 
+      - 5001:5432
+
+  follows:
+    build: ./services/follows
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    volumes:
+      - ./services/follows/src:/usr/src/app/src
+      - ./services/follows/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 8002:8000
+  follows-database:
+    build: ./database/follows
+    ports: 
+      - 5002:5432
+  
