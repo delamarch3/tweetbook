@@ -1,0 +1,404 @@
+openapi: 3.0.0
+info:
+  title: Social media microservices
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+# users
+  /users/register:
+    post:
+      summary: Sign up and create profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT Token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: JWT token
+  /users/login:
+    post:
+      summary: Log in for token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT Token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: JWT token
+# profile
+  /profile:
+    get:
+      summary: Get profile
+      description: ProfileID path is optional. Will default to the user logged in.
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: profileid
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 12345678
+                        description: Profile ID
+                      userid:
+                        type: integer
+                        example: 12345678
+                        description: User ID
+                      username:
+                        type: string
+                        example: bob
+                      email:
+                        type: string
+                        example: bob@bob
+                      bio:
+                        type: string
+                        example: My name is bob.
+                      city:
+                        type: string
+                        example: Manchester
+                      country:
+                        type: string
+                        example: UK
+                      followers:
+                        type: integer
+                        example: 100
+                      following:
+                        type: integer
+                        example: 100
+                      posts:
+                        type: string
+                        example: 100
+                      membersince:
+                        type: string
+                        example: "2022-02-20T15:03:10.885+00:00"
+                      priv:
+                        type: boolean
+                        example: true
+    patch:
+      summary: Update profile
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  data:
+                    type: object
+                    properties:
+                      displayname:
+                        type: string
+                        example: bob
+                      bio:
+                        type: string
+                        example: My name is bob.
+                      city:
+                        type: string
+                        example: Manchester
+                      country:
+                        type: string
+                        example: UK
+                      priv:
+                        type: boolean
+                        example: true
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 12345678
+                        description: Profile ID
+                      userid:
+                        type: integer
+                        example: 12345678
+                        description: User ID
+                      username:
+                        type: string
+                        example: bob
+                      email:
+                        type: string
+                        example: bob@bob
+                      bio:
+                        type: string
+                        example: My name is bob.
+                      city:
+                        type: string
+                        example: Manchester
+                      country:
+                        type: string
+                        example: UK
+                      followers:
+                        type: integer
+                        example: 100
+                      following:
+                        type: integer
+                        example: 100
+                      posts:
+                        type: string
+                        example: 100
+                      membersince:
+                        type: string
+                        example: "2022-02-20T15:03:10.885+00:00"
+                      priv:
+                        type: boolean
+                        example: true
+
+# follows
+  /follows:
+    post:
+      summary: Follow or request to follow a user.
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followeeid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Followed/Requested
+        '400':
+          description: Duplicate
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Duplicate follow/request
+    delete:
+      summary: Unfollow a user
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followeeid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unfollowed
+  /follows/requests:
+    get:
+      summary: Get user follow requests.
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Follow requests
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      data:  
+                        type: object
+                        properties:
+                          requests:
+                           type: array
+    post:
+      summary: Accept a follow request
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Followed
+    delete:
+      summary: Reject a follow request
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Request deleted
+  /follows/following:
+    get:
+      summary: Get following
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                properties:
+                  data:  
+                    type: object
+                    properties:
+                      followers:
+                        type: array
+  /follows/followers:
+    get:
+      summary: Get followers
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:  
+                    type: object
+                    properties:
+                      followers:
+                        type: array
+
+

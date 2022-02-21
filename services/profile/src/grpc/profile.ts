@@ -25,7 +25,9 @@ const isPriv = async (call: IsPrivCall, callback: Function) => {
         const response = await db.getItem(PG.ProfileTable, {
             userid: call.request.followeeid,
         });
-
+        if (!response.rowCount) {
+            return callback(Error("User not found"), null);
+        }
         callback(null, {
             priv: response.rows[0].priv,
         });

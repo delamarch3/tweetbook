@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(auth);
 
-app.use("/profile", profileRoutes);
+app.use("/", profileRoutes);
 
 app.use(errorHandler);
 app.listen(8000, () => console.log("Server started"));

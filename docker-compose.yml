@@ -1,4 +1,17 @@
 services:
+  apigateway:
+    build: ./apigateway
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    hostname: apigateway
+    volumes:
+      - ./apigateway/src:/usr/src/app/src
+      - ./apigateway/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 3000:8000
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
