@@ -7,7 +7,7 @@ service Profile {
 }
 
 message PrivRequest {
-    int64 followeeid = 1;
+    int64 userid = 1;
 }
 
 message PrivResponse {

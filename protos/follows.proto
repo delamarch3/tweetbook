@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package follows;
+
+service Follows {
+    rpc getFollowing (FollowingRequest) returns (FollowingResponse) {}
+    rpc isFollowing (IsFollowingRequest) returns (IsFollowingResponse) {}
+}
+
+message FollowingRequest {
+    int64 followeeid = 1;
+}
+
+message FollowingResponse {
+    repeated Follower followers = 1;
+}
+
+message Follower {
+    int64 followerid = 1;
+    int64 followeeid = 2;
+}
+
+message IsFollowingRequest {
+    int64 followerid = 1;
+    int64 followeeid = 2;
+}
+
+message IsFollowingResponse {
+    bool isFollowing = 1;
+}

@@ -1,16 +1,20 @@
 import express from "express";
 import { errorHandler } from "./middleware/error";
-import followsRouter from "./routes/follows";
 import auth from "./middleware/auth";
+import postsRouter from "./routes/posts";
 import rabbitmq, { Queue, RMQ } from "./rabbitmq/client";
-import grpc from "./grpc/follows";
+import redis from "./redis/client";
 
-export let profileQueue: RMQ;
+const app = express();
+
+export let postsQueue: RMQ;
 (async () => {
+    await redis.connect();
+
     let retries = 5;
     while (retries) {
         try {
-            profileQueue = await rabbitmq("amqp://rabbitmq", Queue.Profile);
+            postsQueue = await rabbitmq("amqp://rabbitmq", Queue.Posts);
             break;
         } catch (err) {
             retries -= 1;
@@ -19,15 +23,12 @@ export let profileQueue: RMQ;
     }
 })();
 
-grpc(10000);
-
-const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use(auth);
 
-app.use("/", followsRouter);
+app.use("/", postsRouter);
 
 app.use(errorHandler);
 app.listen(8000, () => console.log("Server started"));

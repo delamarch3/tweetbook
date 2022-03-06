@@ -29,7 +29,7 @@ services:
       - ./services/users/nodemon.json:/usr/src/app/nodemon.json
       - ./protos:/usr/src/app/protos
     ports:
-      - 8001:8000
+      - 8000:8000
   users-database:
     build: ./database/users
     ports:
@@ -45,7 +45,7 @@ services:
       - ./services/profile/nodemon.json:/usr/src/app/nodemon.json
       - ./protos:/usr/src/app/protos
     ports:
-      - 8000:8000
+      - 8001:8000
   profile-database:
     build: ./database/profile
     ports: 
@@ -66,4 +66,35 @@ services:
     build: ./database/follows
     ports: 
       - 5002:5432
+
+  posts:
+    build: ./services/posts
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    hostname: posts
+    volumes:
+      - ./services/posts/src:/usr/src/app/src
+      - ./services/posts/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 8003:8000
+  posts-worker:
+    build: ./services/posts-worker
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    volumes:
+      - ./services/posts-worker/src:/usr/src/app/src
+      - ./services/posts-worker/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+  posts-database:
+    build: ./database/posts
+    ports: 
+      - 5003:5432
+  posts-redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass redis
+    ports:
+     - 6000:6379
   

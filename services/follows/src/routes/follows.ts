@@ -15,7 +15,7 @@ router.get(
 
         try {
             const response = await db.getItem(PG.FollowsTable, {
-                followeeid: id,
+                followerid: id,
             });
 
             return res.json({ data: response.rows });
@@ -33,7 +33,7 @@ router.get(
 
         try {
             const response = await db.getItem(PG.FollowsTable, {
-                followerid: id,
+                followeeid: id,
             });
 
             return res.json({ data: response.rows });
@@ -48,7 +48,7 @@ router.post("/", async (req: Data, res: Response, next: NextFunction) => {
     const { id }: any = req;
     const { followeeid } = req.body;
 
-    profileRPC.isPriv({ followeeid }, async (err: Error, response: any) => {
+    profileRPC.isPriv({ userid: followeeid }, async (err: Error, response: any) => {
         if (err) return next(err);
 
         try {

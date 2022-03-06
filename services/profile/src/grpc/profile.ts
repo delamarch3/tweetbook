@@ -16,14 +16,14 @@ const proto: any = grpc.loadPackageDefinition(packageDefinition).profile;
 
 interface IsPrivCall {
     request: {
-        followeeid: number;
+        userid: number;
     };
 }
 
 const isPriv = async (call: IsPrivCall, callback: Function) => {
     try {
         const response = await db.getItem(PG.ProfileTable, {
-            userid: call.request.followeeid,
+            userid: call.request.userid,
         });
         if (!response.rowCount) {
             return callback(Error("User not found"), null);

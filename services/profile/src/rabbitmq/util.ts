@@ -34,7 +34,7 @@ const createProfile = async (message: any) => {
                 followers: 0,
                 following: 0,
                 posts: 0,
-                priv: true,
+                priv: false,
                 membersince: new Date(),
             },
             {
