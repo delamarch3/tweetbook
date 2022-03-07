@@ -100,68 +100,61 @@ router.post("/", async (req: Data, res: Response, next: NextFunction) => {
 });
 
 // Update post
-router.patch(
-    "/:postid",
-    async (req: Data, res: Response, next: NextFunction) => {
-        const { postid } = req.params;
-        const { post } = req.body;
+router.patch("/", async (req: Data, res: Response, next: NextFunction) => {
+    const { postid, post } = req.body;
 
-        try {
-            const oldresponse = await db.getItem(PG.PostsTable, { id: postid });
+    try {
+        const oldresponse = await db.getItem(PG.PostsTable, { id: postid });
 
-            const response = await db.updateItem(
-                PG.PostsTable,
-                { post },
-                { id: postid },
-                { returning: ["*"] }
-            );
+        const response = await db.updateItem(
+            PG.PostsTable,
+            { post },
+            { id: postid },
+            { returning: ["*"] }
+        );
 
-            // Update each followers timeline:
-            const message = JSON.stringify({
-                action: "update",
-                post: {
-                    ...response.rows[0],
-                },
-                oldpost: {
-                    ...oldresponse.rows[0],
-                },
-            });
-            postsQueue.sendMessage(message);
+        // Update each followers timeline:
+        const message = JSON.stringify({
+            action: "update",
+            post: {
+                ...response.rows[0],
+            },
+            oldpost: {
+                ...oldresponse.rows[0],
+            },
+        });
+        postsQueue.sendMessage(message);
 
-            res.json({ data: response.rows[0] });
-        } catch (err) {
-            return next(err);
-        }
+        res.json({ data: response.rows[0] });
+    } catch (err) {
+        return next(err);
     }
-);
+});
 
 // Delete post
-router.delete(
-    "/:postid",
-    async (req: Data, res: Response, next: NextFunction) => {
-        const { postid } = req.params;
+router.delete("/", async (req: Data, res: Response, next: NextFunction) => {
+    const { postid } = req.body;
 
-        try {
-            const response = await db.deleteItem(
-                PG.PostsTable,
-                { id: postid },
-                { returning: ["*"] }
-            );
+    try {
+        const response = await db.deleteItem(
+            PG.PostsTable,
+            { id: postid },
+            { returning: ["*"] }
+        );
 
-            // Update each followers timeline:
-            const message = JSON.stringify({
-                action: "delete",
-                post: {
-                    ...response.rows[0],
-                },
-            });
-            postsQueue.sendMessage(message);
+        // Update each followers timeline:
+        const message = JSON.stringify({
+            action: "delete",
+            post: {
+                ...response.rows[0],
+            },
+        });
+        postsQueue.sendMessage(message);
 
-            res.json({ data: response.rows[0] });
-        } catch (err) {
-            return next(err);
-        }
+        res.json({ data: response.rows[0] });
+    } catch (err) {
+        return next(err);
     }
-);
+});
 
 export default router;

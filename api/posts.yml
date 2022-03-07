@@ -1,0 +1,278 @@
+openapi: 3.0.0
+info:
+  title: Social media microservices
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:3000/posts
+
+paths:
+  /:
+    post:
+      summary: Create a post
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                post:
+                  type: string
+      responses:
+        '200':
+          description: Create post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userid:
+                        type: integer
+                      post:
+                        type: string
+                      date:
+                        type: string
+                      likes:
+                        type: integer
+                      comments:
+                        type: integer
+                      timestamp:
+                        type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+    patch:
+      summary: Update a post
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postid:
+                  type: integer
+                post:
+                  type: string
+      responses:
+        '200':
+          description: Update post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userid:
+                        type: integer
+                      post:
+                        type: string
+                      date:
+                        type: string
+                      likes:
+                        type: integer
+                      comments:
+                        type: integer
+                      timestamp:
+                        type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+    delete:
+      summary: Delete a post
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postid:
+                  type: integer
+                post:
+                  type: string
+      responses:
+        '200':
+          description: Delete post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      userid:
+                        type: integer
+                      post:
+                        type: string
+                      date:
+                        type: string
+                      likes:
+                        type: integer
+                      comments:
+                        type: integer
+                      timestamp:
+                        type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /{userid}/{page}:
+    get:
+      summary: Get a users posts
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Users posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        userid:
+                          type: integer
+                        post:
+                          type: string
+                        date:
+                          type: string
+                        likes:
+                          type: integer
+                        comments:
+                          type: integer
+                        timestamp:
+                          type: integer
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+  /timeline/{page}:
+    get:
+      summary: Get the logged in users timeline
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Timeline
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        userid:
+                          type: integer
+                        post:
+                          type: string
+                        date:
+                          type: string
+                        likes:
+                          type: integer
+                        comments:
+                          type: integer
+                        timestamp:
+                          type: integer
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error

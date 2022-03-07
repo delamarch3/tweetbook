@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: Social media microservices
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:3000/users
+
+paths:
+  /register:
+    post:
+      summary: Sign up and create profile.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT Token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: JWT token
+  /login:
+    post:
+      summary: Log in for token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: JWT Token
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: JWT token

@@ -1,0 +1,201 @@
+openapi: 3.0.0
+info:
+  title: Social media microservices
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:3000/follows
+
+paths:
+  /:
+    post:
+      summary: Follow or request to follow a user.
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followeeid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Followed/Requested
+        '400':
+          description: Duplicate
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Duplicate follow/request
+    delete:
+      summary: Unfollow a user
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followeeid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unfollowed
+  /requests:
+    get:
+      summary: Get user follow requests.
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Follow requests
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      data:  
+                        type: object
+                        properties:
+                          requests:
+                           type: array
+    post:
+      summary: Accept a follow request
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Followed
+    delete:
+      summary: Reject a follow request
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                followerid:
+                  type: number
+      responses:
+        '200':
+          description: Follow/request success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Request deleted
+  /following:
+    get:
+      summary: Get following
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                properties:
+                  data:  
+                    type: object
+                    properties:
+                      followers:
+                        type: array
+  /followers:
+    get:
+      summary: Get followers
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data:  
+                    type: object
+                    properties:
+                      followers:
+                        type: array
+
