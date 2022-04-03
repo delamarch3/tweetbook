@@ -4,7 +4,6 @@ services:
     environment:
       - ENV=${ENV}
       - JWTSECRET=${JWTSECRET}
-    hostname: apigateway
     volumes:
       - ./apigateway/src:/usr/src/app/src
       - ./apigateway/nodemon.json:/usr/src/app/nodemon.json
@@ -98,3 +97,23 @@ services:
     ports:
      - 6000:6379
   
+  comments:
+    build: ./services/comments
+    environment:
+      - ENV=${ENV}
+      - JWTSECRET=${JWTSECRET}
+    volumes:
+      - ./services/comments/src:/usr/src/app/src
+      - ./services/comments/nodemon.json:/usr/src/app/nodemon.json
+      - ./protos:/usr/src/app/protos
+    ports:
+      - 8004:8000
+  comments-database:
+    build: ./database/comments
+    ports: 
+      - 5004:5432
+  comments-redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass redis
+    ports:
+     - 6001:6379

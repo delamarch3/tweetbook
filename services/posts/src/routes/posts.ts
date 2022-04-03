@@ -20,11 +20,12 @@ router.get(
         const offset = parseInt(page) * count;
 
         try {
-            if (id != parseInt(userid)) {
+            if (id != userid) {
                 const privProfile = await isPriv(parseInt(userid));
                 if (privProfile) {
                     const following =
-                        id && (await isFollowing(id, parseInt(userid)));
+                        id &&
+                        (await isFollowing(parseInt(id), parseInt(userid)));
                     if (!following) return res.status(403).json({ data: [] });
                 }
             }

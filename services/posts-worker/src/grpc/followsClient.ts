@@ -16,7 +16,7 @@ const proto: any = grpc.loadPackageDefinition(packageDefinition).follows;
 const target = "follows:10000";
 const client = new proto.Follows(target, grpc.credentials.createInsecure());
 
-export const getFollowers = (userid: number): Promise<any[]> => {
+export const getFollowers = (userid: string): Promise<any[]> => {
     return new Promise((resolve, reject) => {
         client.getFollowing(
             { followeeid: userid },

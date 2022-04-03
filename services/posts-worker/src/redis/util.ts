@@ -1,9 +1,10 @@
 import redis, { RedisKeys } from "./client";
-import { Post } from "../rabbitmq/util";
+import { UpdatePosts } from "../rabbitmq/util";
+import db, { PG } from "../db/pool";
 
 export const addToFeeds = async (
     poststring: string,
-    post: Post,
+    post: UpdatePosts,
     followers: any[]
 ) => {
     try {
@@ -26,7 +27,7 @@ export const addToFeeds = async (
 export const updateFeeds = async (
     oldpost: string,
     newpost: string,
-    post: Post,
+    post: UpdatePosts,
     followers: any[]
 ) => {
     try {
@@ -56,7 +57,7 @@ export const updateFeeds = async (
 
 export const deleteFromFeeds = async (
     oldpost: string,
-    post: Post,
+    post: UpdatePosts,
     followers: any[]
 ) => {
     try {
@@ -68,6 +69,38 @@ export const deleteFromFeeds = async (
                 oldpost
             );
         }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const commentCount = async (
+    postid: number,
+    followers: any[],
+    increment: boolean
+) => {
+    try {
+        const oldresponse = await db.getItem(PG.PostsTable, { id: postid });
+        const oldpost = JSON.stringify(oldresponse.rows[0]);
+
+        const response = await db.pool.query(
+            `UPDATE posts SET comments = ${
+                increment ? "comments + 1" : "comments - 1"
+            } WHERE id = $1 RETURNING *`,
+            [postid]
+        );
+
+        const newpost = JSON.stringify(response.rows[0]);
+
+        await updateFeeds(
+            oldpost,
+            newpost,
+            {
+                userid: response.rows[0].userid,
+                timestamp: response.rows[0].timestamp,
+            },
+            followers
+        );
     } catch (err) {
         console.log(err);
     }

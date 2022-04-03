@@ -131,8 +131,6 @@ paths:
               properties:
                 postid:
                   type: integer
-                post:
-                  type: string
       responses:
         '200':
           description: Delete post

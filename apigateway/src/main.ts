@@ -11,6 +11,7 @@ app.use("/users", proxy("http://users:8000"));
 app.use("/profile", proxy("http://profile:8000"));
 app.use("/follows", proxy("http://follows:8000"));
 app.use("/posts", proxy("http://posts:8000"));
+app.use("/comments", proxy("http://comments:8000"));
 
 app.use(errorHandler);
 app.listen(8000, () => console.log("Server started"));

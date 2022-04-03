@@ -33,7 +33,7 @@ export const createUser = async (
     email: string,
     password: string
 ) => {
-    const id = randomise("0", 4);
+    const id = randomise("0", 8);
 
     const hashPassword = await bcrypt.hash(password, 10);
 

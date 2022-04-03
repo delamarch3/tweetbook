@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Social media microservices
+  version: 0.1.9
+
+servers:
+  - url: http://localhost:3000/comments
+
+paths:
+  /:
+    post:
+      summary: Comment on a post
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postid:
+                  type: integer
+                comment:
+                  type: string
+      responses:
+        '200':
+          description: Create comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userid:
+                    type: integer
+                  postid:
+                    type: integer
+                  comment:
+                    type: string
+                  date:
+                    type: string
+                  likes:
+                    type: integer
+                  timestemp:
+                    type: integer
+                  
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+    patch:
+      summary: Edit a comment
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentid:
+                  type: number
+                comment:
+                  type: string
+      responses:
+        '200':
+          description: Update comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userid:
+                    type: integer
+                  postid:
+                    type: integer
+                  comment:
+                    type: string
+                  date:
+                    type: string
+                  likes:
+                    type: integer
+                  timestemp:
+                    type: integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+    delete:
+      summary: Delete a comment
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                commentid:
+                  type: number
+      responses:
+        '200':
+          description: Delete comment
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  userid:
+                    type: integer
+                  postid:
+                    type: integer
+                  comment:
+                    type: string
+                  date:
+                    type: string
+                  likes:
+                    type: integer
+                  timestemp:
+                    type: integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+  /{postid}/{page}:
+    get:
+      summary: Get comments on a post
+      parameters:
+        - name: JWT
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: postid
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postid:
+                  type: integer
+      responses:
+        '200':
+          description: Get comments
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  data: 
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        userid:
+                          type: integer
+                        postid:
+                          type: integer
+                        comment:
+                          type: string
+                        date:
+                          type: string
+                        likes:
+                          type: integer
+                        timestemp:
+                          type: integer
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error

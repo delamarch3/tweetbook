@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 // Data from jwt payload
 export interface Data extends Request {
-    id?: string;
+    id?: number;
     username?: string;
 }
 
@@ -24,6 +24,7 @@ export default async (req: Data, _res: Response, next: NextFunction) => {
 
     try {
         const payload: any = jwt.verify(token, secret);
+
         req.id = payload.id;
         req.username = payload.username;
 
